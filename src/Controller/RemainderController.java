@@ -3,8 +3,9 @@ package Controller;
 import Model.User;
 import Service.RemainderService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class RemainderController {
@@ -19,13 +20,18 @@ public class RemainderController {
     public void createRemainder(User user) {
         System.out.println("Enter Habit Name:");
         String habitName = scan.nextLine();
-        System.out.println("Enter reminder time (yyyy-MM-dd HH:mm):");
+        System.out.print("Enter date (yyyy-MM-dd): ");
+        String dateInput = scan.nextLine();
+
+        System.out.print("Enter time (HH:mm): ");
         String timeInput = scan.nextLine();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime reminderTime = LocalDateTime.parse(timeInput, formatter);
+        LocalDate date = LocalDate.parse(dateInput);
+        LocalTime time = LocalTime.parse(timeInput);
+        LocalDateTime reminderDateTime = LocalDateTime.of(date, time);
 
-        remainderService.create(remainderID++, user, habitName, reminderTime);
+        remainderService.create(remainderID++, user, habitName, reminderDateTime);
         System.out.println("Remainder has been created successfully!");
+        remainderService.startReminderChecker();
     }
 }

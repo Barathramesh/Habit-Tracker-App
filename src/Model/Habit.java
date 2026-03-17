@@ -1,5 +1,7 @@
 package Model;
 
+import java.time.LocalDate;
+
 public class Habit {
     private int habitID;
     private String username;
@@ -8,6 +10,7 @@ public class Habit {
     private boolean completionStatus;
     private int streak;
     private int totaldays;
+    private LocalDate lastcompletedDate;
 
     public Habit(String userID, int habitID, String habitName, String frequency) {
         this.habitID = habitID;
@@ -15,6 +18,9 @@ public class Habit {
         this.habitName = habitName;
         this.frequency = frequency;
         this.completionStatus = false;
+        this.streak = 0;
+        this.totaldays = 0;
+        this.lastcompletedDate = LocalDate.now();
     }
 
     public int getHabitID() {
@@ -83,9 +89,10 @@ public class Habit {
 
     @Override
     public String toString() {
-        return "{" +  "Habit = " + habitName + '\'' +
-                ", frequency = " + frequency + '\'' +
-                ", completion Status = " + completionStatus +
-                '}';
+        return "Habit: " + habitName +
+                ", Frequency: " + frequency +
+                ", Streak: " + streak +
+                ", Total: " + totaldays +
+                ", Last Done: " + lastcompletedDate;
     }
 }

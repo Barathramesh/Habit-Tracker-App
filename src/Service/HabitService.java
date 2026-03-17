@@ -42,6 +42,8 @@ public class HabitService {
                      points += 5;
                  }
                  user.setPoints(points);
+                 habit1.setStreak(habit1.getStreak() + 1);
+                 habit1.setTotaldays(habit1.getTotaldays() + 1);
             }
         }
     }

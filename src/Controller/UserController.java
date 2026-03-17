@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import Service.CommunityService;
+import Service.HabitService;
 import Service.UserService;
 
 import java.util.*;
@@ -13,14 +14,19 @@ public class UserController {
     private final HabitController habitController;
     private final JournalController journalController;
     private final PostController postController;
+    private final ProgressController progressController;
+    private final RemainderController remainderController;
 
     public UserController(Scanner scan) {
         this.scan = scan;
         CommunityService communityService = new CommunityService();
+        HabitService habitService = new HabitService();
         this.communityController = new CommunityController(scan, communityService);
-        this.habitController = new HabitController(scan);
+        this.habitController = new HabitController(scan, habitService);
         this.journalController = new JournalController(scan);
         this.postController = new PostController(scan, communityService);
+        this.progressController = new ProgressController(scan, habitService);
+        this.remainderController = new RemainderController(scan);
     }
 
     public void initialize() {
@@ -80,7 +86,9 @@ public class UserController {
             System.out.println("2. View Community Menu:");
             System.out.println("3. View Journal Menu:");
             System.out.println("4. View Post Menu:");
-            System.out.println("5. Return to Login Page:");
+            System.out.println("5. Create a Remainder:");
+            System.out.println("6. View Progress:");
+            System.out.println("7. Return to Login Page:");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -98,6 +106,12 @@ public class UserController {
                     postController.PostMenu(user);
                    break;
                 case 5:
+                    remainderController.createRemainder(user);
+                    break;
+                case 6:
+                    progressController.ProgressMenu(user);
+                    break;
+                case 7:
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");

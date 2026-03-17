@@ -11,13 +11,14 @@ import java.util.*;
 
 public class HabitController {
     private final Scanner scan;
-    private final HabitService habitService = new HabitService();
+    private final HabitService habitService;
     private final RewardService rewardService = new RewardService();
     private int habitID = 5;
     private int rewardID = 1;
 
-    public HabitController(Scanner scan) {
+    public HabitController(Scanner scan, HabitService habitService) {
         this.scan = scan;
+        this.habitService = habitService;
     }
 
     public void HabitMenu(User user) {

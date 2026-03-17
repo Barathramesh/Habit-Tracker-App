@@ -49,11 +49,10 @@ public class Remainder {
         this.remainderTime = remainderTime;
     }
 
-    public boolean isStatus() {
+    public boolean isTriggered() {
         return status;
     }
-
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void markTriggered() {
+        this.status = true;
     }
 }
