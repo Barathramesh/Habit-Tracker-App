@@ -6,17 +6,16 @@ public class Community {
     private int CommunityID;
     private String CommunityName;
     private String AdminID;
-    private List<User> Users;
+    private HashSet<User> Users;
     private List<Post> Posts;
 
     public Community(int communityID, String communityName, String adminID, User user) {
-        CommunityID = communityID;
-        CommunityName = communityName;
-        AdminID = adminID;
-        this.Users = new ArrayList<>();
+        this.CommunityID = communityID;
+        this.CommunityName = communityName;
+        this.AdminID = adminID;
+        this.Users = new HashSet<>();
         this.Posts = new ArrayList<>();
         this.Users.add(user);
-        this.AdminID = adminID;
     }
 
 
@@ -44,11 +43,11 @@ public class Community {
         AdminID = adminID;
     }
 
-    public List<User> getUsers() {
+    public HashSet<User> getUsers() {
         return Users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(HashSet<User> users) {
         Users = users;
     }
 
@@ -58,5 +57,14 @@ public class Community {
 
     public void setPosts(List<Post> posts) {
         Posts = posts;
+    }
+
+    @Override
+    public String toString() {
+        return "Community{" +
+                "Community ID = " + CommunityID +
+                ", Community Name = '" + CommunityName + '\'' +
+                ", Admin Name = '" + AdminID + '\'' +
+                '}';
     }
 }

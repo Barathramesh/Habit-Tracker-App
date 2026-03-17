@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JournalService {
-    List<Journal> listofJournal =  new ArrayList<Journal>();
+    List<Journal> listofJournal =  new ArrayList<>();
 
     public Journal create(int journalId, String mood, String content, User user) {
-        Journal journal = new Journal(journalId, user.getUsername(), mood, content);
+        Journal journal = new Journal(journalId, user.getUsername(), content, mood);
         listofJournal.add(journal);
         return journal;
     }

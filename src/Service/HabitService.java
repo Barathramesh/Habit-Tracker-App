@@ -31,7 +31,17 @@ public class HabitService {
     public void completedMyHabit(String habit, User user) {
         for(Habit habit1 : habits) {
             if(habit1.getUserName().equals(user.getUsername()) && habit1.getHabitName().equals(habit)) {
-
+                 habit1.setCompletionStatus(true);
+                 int points = user.getPoints();
+                 String frequency = habit1.getFrequency();
+                 if(frequency.equals("Daily")) {
+                     points += 15;
+                 } else if(frequency.equals("Weekly")) {
+                     points += 10;
+                 } else {
+                     points += 5;
+                 }
+                 user.setPoints(points);
             }
         }
     }

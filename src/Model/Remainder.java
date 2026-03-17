@@ -9,6 +9,14 @@ public class Remainder {
     private LocalDateTime remainderTime;
     private boolean status;
 
+    public Remainder(int remainderID, String username, String habitname, LocalDateTime remainderTime) {
+        RemainderID = remainderID;
+        this.username = username;
+        Habitname = habitname;
+        this.remainderTime = remainderTime;
+        this.status = false;
+    }
+
     public int getRemainderID() {
         return RemainderID;
     }
@@ -29,10 +37,9 @@ public class Remainder {
         return Habitname;
     }
 
-    public void setHabitID(String habitname) {
+    public void setHabitname(String habitname) {
         Habitname = habitname;
     }
-
 
     public LocalDateTime getRemainderTime() {
         return remainderTime;
@@ -41,18 +48,12 @@ public class Remainder {
     public void setRemainderTime(LocalDateTime remainderTime) {
         this.remainderTime = remainderTime;
     }
+
     public boolean isStatus() {
         return status;
     }
+
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public Remainder(int remainderID, String username, String habitname, LocalDateTime remainderTime) {
-        RemainderID = remainderID;
-        this.username = username;
-        Habitname = habitname;
-        this.remainderTime = remainderTime;
-        this.status = false;
     }
 }

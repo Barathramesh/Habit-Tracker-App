@@ -5,8 +5,7 @@ import Model.Post;
 import Model.User;
 import Service.CommunityService;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class CommunityController {
     private final Scanner scan;
@@ -22,9 +21,10 @@ public class CommunityController {
             System.out.println();
             System.out.println("1. Create a Community:");
             System.out.println("2. Join a Community:");
-            System.out.println("3. View a Community:");
-            System.out.println("4. Leave a Community:");
-            System.out.println("5. Back to Main Menu.");
+            System.out.println("3. Show All Communities:");
+            System.out.println("4. View a Community:");
+            System.out.println("5. Leave a Community:");
+            System.out.println("6. Back to Main Menu.");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -36,12 +36,15 @@ public class CommunityController {
                     joinCommunity(user);
                     break;
                 case 3:
-                    viewCommunity();
+                    showAllCommunities(user);
                     break;
                 case 4:
-                    leaveCommunity(user);
+                    viewCommunity();
                     break;
                 case 5:
+                    leaveCommunity(user);
+                    break;
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice!");
@@ -50,7 +53,14 @@ public class CommunityController {
         }
     }
 
-    public void createCommunity(User user) {
+    private void showAllCommunities(User user) {
+        HashSet<Community> mycommunities = user.getCommunities();
+        for (Community community : mycommunities) {
+            System.out.println(community);
+        }
+    }
+
+    private void createCommunity(User user) {
         while(true) {
             System.out.println("Enter the name of the community: ");
             String name = scan.nextLine();
@@ -66,22 +76,23 @@ public class CommunityController {
 
     }
 
-    public void joinCommunity(User user) {
+    private void joinCommunity(User user) {
         while(true) {
             System.out.println("Enter the name of the community: ");
             String name = scan.nextLine();
             if(!communityService.existOrNot(name)) {
                 System.out.println("Community doesn't exists!");
             } else {
-                List<User> users = communityService.joinCommunity(name,user);
-                System.out.println("You have joined the community successfully!");
-                System.out.println(users);
-                return;
+                if(!communityService.joinCommunity(name,user)) {
+                    System.out.println("You have joined the community successfully!");
+                } else {
+                    
+                }
             }
         }
     }
 
-    public void leaveCommunity(User user) {
+    private void leaveCommunity(User user) {
         while(true) {
             System.out.println("Enter the name of the community: ");
             String name = scan.nextLine();
@@ -95,7 +106,7 @@ public class CommunityController {
         }
     }
 
-    public void viewCommunity() {
+    private void viewCommunity() {
         while(true) {
             System.out.println("Enter the name of the community: ");
             String name = scan.nextLine();
@@ -103,7 +114,7 @@ public class CommunityController {
                 System.out.println("Community doesn't exists!");
             } else {
                 Community chats = communityService.viewCommunity(name);
-                List<User> users = chats.getUsers();
+                 HashSet<User> users = chats.getUsers();
                 List<Post> posts = chats.getPosts();
 
                 System.out.println("List of users:");

@@ -17,11 +17,6 @@ public class Habit {
         this.completionStatus = false;
     }
 
-    public Habit(int streak, int totaldays) {
-        this.streak = streak;
-        this.totaldays = totaldays;
-    }
-
     public int getHabitID() {
         return habitID;
     }

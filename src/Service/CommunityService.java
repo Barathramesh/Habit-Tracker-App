@@ -7,7 +7,7 @@ import Model.User;
 import java.util.*;
 
 public class CommunityService {
-    private final LinkedHashMap<String, Community> community = new LinkedHashMap<>();
+    private final HashMap<String, Community> community = new HashMap<>();
     private int CommunityID = 1;
     private int PostID = 1;
 
@@ -18,17 +18,22 @@ public class CommunityService {
     public void createCommunity(String name, User user) {
         Community community1 = new Community(CommunityID++, name, user.getUsername(), user);
         community.put(name.toLowerCase(), community1);
+        user.getCommunities().add(community1);
     }
 
     public Community viewCommunity(String name) {
         return community.get(name.toLowerCase());
     }
 
-    public List<User> joinCommunity(String name, User user) {
+    public boolean joinCommunity(String name, User user) {
         Community community1 = community.get(name.toLowerCase());
         community1.getUsers().add(user);
-
-        return communityUsers(community1);
+        if(user.getCommunities().contains(community1)) {
+            return true;
+        } else {
+            user.getCommunities().add(community1);
+            return false;
+        }
     }
 
     public void leaveCommunity(String name, User user) {
@@ -37,10 +42,7 @@ public class CommunityService {
             return;
         }
         community1.getUsers().removeIf(u -> u.getUsername().equals(user.getUsername()));
-    }
-
-    public List<User> communityUsers(Community community) {
-        return new ArrayList<>(community.getUsers());
+        user.getCommunities().removeIf(c -> c.getCommunityID() == community1.getCommunityID());
     }
 
     public boolean createPost(User user, String content, String group) {
@@ -51,5 +53,10 @@ public class CommunityService {
         Post post = new Post(PostID++, user.getUsername(), community1, content);
         community1.getPosts().add(post);
         return true;
+    }
+
+    public List<Post> getAllPost(User user, String name) {
+        Community community1 = community.get(name.toLowerCase());
+        return community1.getPosts();
     }
 }

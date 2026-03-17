@@ -13,7 +13,4 @@ public class RemainderService {
         Remainder remainder = new Remainder(remainderID, user.getUsername(), habitName, reminderTime);
         remainderList.add(remainder);
     }
-
-
-
 }

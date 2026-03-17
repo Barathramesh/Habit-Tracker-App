@@ -2,15 +2,19 @@ package Controller;
 
 import Model.Habit;
 import Model.PredefinedHabit;
+import Model.Reward;
 import Model.User;
 import Service.HabitService;
+import Service.RewardService;
 
 import java.util.*;
 
 public class HabitController {
     private final Scanner scan;
     private final HabitService habitService = new HabitService();
+    private final RewardService rewardService = new RewardService();
     private int habitID = 5;
+    private int rewardID = 1;
 
     public HabitController(Scanner scan) {
         this.scan = scan;
@@ -73,7 +77,7 @@ public class HabitController {
         System.out.println("Tell me whether you can do it on(Daily/Weekly/Monthly):");
         String choice = scan.nextLine();
 
-        habitService.customHabits(habitID, habit, user, choice);
+        habitService.customHabits(habitID++, habit, user, choice);
         System.out.println("You have successfully started the Habit.");
     }
 
@@ -100,10 +104,12 @@ public class HabitController {
             String habit = scan.nextLine();
             habitService.completedMyHabit(habit, user);
             System.out.println("Keep rocking..");
+
+            //Reward Creation
+            Reward myreward = rewardService.generateReward(user, habit, rewardID++);
+            System.out.println(myreward);
         } else {
             System.out.println("No habits found");
         }
-
     }
-
 }

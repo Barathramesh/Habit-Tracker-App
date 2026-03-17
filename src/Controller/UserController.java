@@ -4,7 +4,7 @@ import Model.User;
 import Service.CommunityService;
 import Service.UserService;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class UserController {
     private final Scanner scan;
@@ -22,9 +22,30 @@ public class UserController {
         this.journalController = new JournalController(scan);
         this.postController = new PostController(scan, communityService);
     }
+
     public void initialize() {
         userService.register("barath","123","123456789");
         userService.register("ajay","123","123456789");
+    }
+
+    public void signup() {
+        while(true) {
+            System.out.println("Enter your username:");
+            String username = scan.nextLine();
+            if(userService.existOrNot(username)) {
+                System.out.println("Username already exists!");
+                System.out.println();
+                continue;
+            }
+            System.out.println("Enter your password:");
+            String password = scan.nextLine();
+            System.out.println("Enter your mobile number:");
+            String mobileNumber = scan.nextLine();
+
+            userService.register(username, password, mobileNumber);
+            System.out.println("You have successfully registered!. Now Login into the System.");
+            break;
+        }
     }
 
     public void login() {
@@ -51,36 +72,15 @@ public class UserController {
         }
     }
 
-    public void signup() {
-        while(true) {
-            System.out.println("Enter your username:");
-            String username = scan.nextLine();
-            if(userService.existOrNot(username)) {
-                System.out.println("Username already exists!");
-                System.out.println();
-                continue;
-            }
-            System.out.println("Enter your password:");
-            String password = scan.nextLine();
-            System.out.println("Enter your mobile number:");
-            String mobileNumber = scan.nextLine();
-
-            userService.register(username, password, mobileNumber);
-            System.out.println("You have successfully registered!. Now Login into the System.");
-            break;
-        }
-    }
-
     public void showMenu(User user) {
         while(true) {
             System.out.println();
             System.out.println("Menu:");
             System.out.println("1. View Habits Menu:");
             System.out.println("2. View Community Menu:");
-            System.out.println("3. Write a Journal:");
-            System.out.println("4. View All Journals:");
-            System.out.println("5. Create a Post:");
-            System.out.println("6. Return to Login Page:");
+            System.out.println("3. View Journal Menu:");
+            System.out.println("4. View Post Menu:");
+            System.out.println("5. Return to Login Page:");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -92,20 +92,16 @@ public class UserController {
                     communityController.CommunityMenu(user);
                    break;
                 case 3:
-                    journalController.createJournal(user);
+                    journalController.JournalMenu(user);
                    break;
                 case 4:
-                    journalController.viewAllMyJournal(user);
-                    break;
-                case 5:
-                    postController.createPost(user);
+                    postController.PostMenu(user);
                    break;
-                case 6:
+                case 5:
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
         }
     }
-
 }
