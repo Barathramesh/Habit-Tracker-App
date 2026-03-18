@@ -1,5 +1,6 @@
 package Model;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class User {
@@ -7,6 +8,9 @@ public class User {
     private String password;
     private String phone;
     private int points = 0;
+    private int loginStreak = 0;
+    private LocalDate lastLoginDate;
+    private int totalHabitsCompleted = 0;
     private HashSet<Community> communities;
 
     public User(String username, String password, String phone) {
@@ -14,6 +18,9 @@ public class User {
         this.password = password;
         this.phone = phone;
         this.communities = new HashSet<>();
+        this.loginStreak = 0;
+        this.lastLoginDate = null;
+        this.totalHabitsCompleted = 0;
     }
 
     public String getUsername() {
@@ -55,6 +62,31 @@ public class User {
     public void setCommunities(HashSet<Community> communities) {
         this.communities = communities;
     }
+
+    public int getLoginStreak() {
+        return loginStreak;
+    }
+
+    public void setLoginStreak(int loginStreak) {
+        this.loginStreak = loginStreak;
+    }
+
+    public LocalDate getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(LocalDate lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public int getTotalHabitsCompleted() {
+        return totalHabitsCompleted;
+    }
+
+    public void setTotalHabitsCompleted(int totalHabitsCompleted) {
+        this.totalHabitsCompleted = totalHabitsCompleted;
+    }
+
 
     @Override
     public String toString() {

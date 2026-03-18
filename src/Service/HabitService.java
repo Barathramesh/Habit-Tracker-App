@@ -3,6 +3,7 @@ package Service;
 import Model.Habit;
 import Model.User;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class HabitService {
@@ -28,23 +29,28 @@ public class HabitService {
         return myhabits;
     }
 
-    public void completedMyHabit(String habit, User user) {
-        for(Habit habit1 : habits) {
-            if(habit1.getUserName().equals(user.getUsername()) && habit1.getHabitName().equals(habit)) {
-                 habit1.setCompletionStatus(true);
-                 int points = user.getPoints();
-                 String frequency = habit1.getFrequency();
-                 if(frequency.equals("Daily")) {
-                     points += 15;
-                 } else if(frequency.equals("Weekly")) {
-                     points += 10;
-                 } else {
-                     points += 5;
-                 }
-                 user.setPoints(points);
-                 habit1.setStreak(habit1.getStreak() + 1);
-                 habit1.setTotaldays(habit1.getTotaldays() + 1);
+    public Habit markHabitCompleted(User user, String habitName) {
+        List<Habit> habits = getMyHabits(user);
+        for (Habit habit : habits) {
+            if (habit.getHabitName().equalsIgnoreCase(habitName)) {
+                LocalDate today = LocalDate.now();
+                if (today.equals(habit.getLastcompletedDate())) {
+                    System.out.println("Already completed today!");
+                    return habit;
+                }
+
+                if (habit.getLastcompletedDate() != null && habit.getLastcompletedDate().plusDays(1).equals(today)) {
+                    habit.setStreak(habit.getStreak() + 1);
+                } else {
+                    habit.setStreak(1); // reset streak
+                }
+
+                habit.setLastcompletedDate(today);
+                user.setTotalHabitsCompleted(user.getTotalHabitsCompleted() + 1);
+                return habit;
             }
         }
+        return null;
     }
+
 }

@@ -22,8 +22,4 @@ public class ProgressService {
         System.out.printf( "Completion Rate : %.1f%%%n", rate);
         System.out.println("Total Points    : " + user.getPoints());
     }
-
-    public void showHabitProgress(List<Habit> habits2, String habitName) {
-
-    }
 }

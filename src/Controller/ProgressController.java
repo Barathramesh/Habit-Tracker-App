@@ -22,8 +22,7 @@ public class ProgressController {
     public void ProgressMenu(User user) {
         while (true) {
             System.out.println("1. Overall Progress:");
-            System.out.println("2. Habit Progress:");
-            System.out.println("3. Back to Main Menu.");
+            System.out.println("2. Back to Main Menu.");
 
             int choice = Integer.parseInt(scan.nextLine());
             switch (choice) {
@@ -31,9 +30,6 @@ public class ProgressController {
                     overAllProgress(user);
                     break;
                 case 2:
-                    habitProgress(user);
-                    break;
-                case 3:
                     return;
                 default:
                     System.out.println("Invalid choice.");
@@ -45,15 +41,5 @@ public class ProgressController {
     private void overAllProgress(User user) {
         List<Habit> habits = habitService.getMyHabits(user);
         progressService.showOverallProgress(user, habits);
-    }
-
-    private void habitProgress(User user) {
-        List<Habit> habits = habitService.getMyHabits(user);
-        for (Habit habit : habits) {
-            System.out.print(habit.getHabitName()+" ");
-        }
-        System.out.println("Enter a habit from above list:");
-        String habitName = scan.nextLine();
-        progressService.showHabitProgress(habits, habitName);
     }
 }

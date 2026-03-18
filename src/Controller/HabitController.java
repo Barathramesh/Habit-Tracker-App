@@ -11,14 +11,15 @@ import java.util.*;
 
 public class HabitController {
     private final Scanner scan;
-    private final HabitService habitService;
+    private final HabitService habitService = new HabitService();
     private final RewardService rewardService = new RewardService();
+    private final RemainderController remainderController;
     private int habitID = 5;
     private int rewardID = 1;
 
-    public HabitController(Scanner scan, HabitService habitService) {
+    public HabitController(Scanner scan) {
         this.scan = scan;
-        this.habitService = habitService;
+        this.remainderController = new RemainderController(scan);
     }
 
     public void HabitMenu(User user) {
@@ -28,7 +29,9 @@ public class HabitController {
             System.out.println("2. Customize your Habits:");
             System.out.println("3. View All My Habits:");
             System.out.println("4. Completed a Habit:");
-            System.out.println("5. Back to Main Menu.");
+            System.out.println("5. View My Rewards:");
+            System.out.println("6. Create a Remainder:");
+            System.out.println("7. Back to Main Menu.");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -46,6 +49,10 @@ public class HabitController {
                     completedMyHabit(user);
                     break;
                 case 5:
+                    viewMyRewards(user);
+                case 6:
+                    remainderController.createRemainder(user);
+                case 7:
                     return;
                 default:
                     System.out.println("Invalid choice!");
@@ -95,22 +102,42 @@ public class HabitController {
     }
 
     private void completedMyHabit(User user) {
-        System.out.println("Have completed any of your following Habits:");
-        List<Habit> myhabits = habitService.getMyHabits(user);
-        if(!myhabits.isEmpty()) {
-            for (Habit habit : myhabits) {
-                System.out.println(habit);
-            }
-            System.out.println("Enter a Habit you have completed:");
-            String habit = scan.nextLine();
-            habitService.completedMyHabit(habit, user);
-            System.out.println("Keep rocking..");
 
-            //Reward Creation
-            Reward myreward = rewardService.generateReward(user, habit, rewardID++);
-            System.out.println(myreward);
-        } else {
+        List<Habit> myhabits = habitService.getMyHabits(user);
+
+        if (myhabits.isEmpty()) {
             System.out.println("No habits found");
+            return;
+        }
+
+        myhabits.forEach(System.out::println);
+
+        System.out.println("Enter a Habit you have completed:");
+        String habitName = scan.nextLine();
+
+        Habit habit = habitService.markHabitCompleted(user, habitName);
+
+        if (habit == null) {
+            System.out.println("Invalid habit!");
+            return;
+        }
+
+        // 🔥 Only one call
+        List<Reward> rewards = rewardService.processRewards(user, habit);
+
+        rewards.forEach(System.out::println);
+
+        System.out.println("Keep rocking.. 🚀");
+    }
+
+    private void viewMyRewards(User user) {
+        List<Reward> myRewards = rewardService.getRewardsByUser(user.getUsername());
+        if(!myRewards.isEmpty()) {
+            for (Reward reward : myRewards) {
+                System.out.println(reward);
+            }
+        }else {
+            System.out.println("No rewards found");
         }
     }
 }

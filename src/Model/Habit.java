@@ -11,6 +11,7 @@ public class Habit {
     private int streak;
     private int totaldays;
     private LocalDate lastcompletedDate;
+    private LocalDate lastRewardDate;
 
     public Habit(String userID, int habitID, String habitName, String frequency) {
         this.habitID = habitID;
@@ -21,6 +22,7 @@ public class Habit {
         this.streak = 0;
         this.totaldays = 0;
         this.lastcompletedDate = LocalDate.now();
+        this.lastRewardDate = null;
     }
 
     public int getHabitID() {
@@ -85,6 +87,22 @@ public class Habit {
 
     public void setTotaldays(int totaldays) {
         this.totaldays = totaldays;
+    }
+
+    public LocalDate getLastRewardDate() {
+        return lastRewardDate;
+    }
+
+    public void setLastRewardDate(LocalDate lastRewardDate) {
+        this.lastRewardDate = lastRewardDate;
+    }
+
+    public LocalDate getLastcompletedDate() {
+        return lastcompletedDate;
+    }
+
+    public void setLastcompletedDate(LocalDate lastcompletedDate) {
+        this.lastcompletedDate = lastcompletedDate;
     }
 
     @Override

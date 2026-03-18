@@ -38,7 +38,7 @@ public class JournalController {
         }
     }
 
-    private void createJournal(User user) {
+    void createJournal(User user) {
         System.out.println("Enter your current mood (Happy, Sad, ...):");
         String mood = scan.nextLine();
         System.out.println("Enter your content (type END to finish):");
@@ -58,7 +58,7 @@ public class JournalController {
         System.out.println(journal);
     }
 
-    private void viewAllMyJournal(User user) {
+    void viewAllMyJournal(User user) {
         List<Journal> listofJournal = journalService.getAllJournal(user);
         if(listofJournal.isEmpty()) {
             System.out.println("No journal found");

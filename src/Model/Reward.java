@@ -9,6 +9,8 @@ public class Reward {
     private String username;
     private int points;
     private LocalDate awardedAt;
+    private String rewardType;
+    private String description;
 
     public Reward(int rewardID, String rewardName, String username, int points) {
         this.rewardID = rewardID;
@@ -16,6 +18,18 @@ public class Reward {
         this.username = username;
         this.points = points;
         this.awardedAt = LocalDate.now();
+        this.rewardType = "HABIT_COMPLETION";
+        this.description = "";
+    }
+
+    public Reward(int rewardID, String rewardName, String username, int points, String rewardType, String description) {
+        this.rewardID = rewardID;
+        this.rewardName = rewardName;
+        this.username = username;
+        this.points = points;
+        this.awardedAt = LocalDate.now();
+        this.rewardType = rewardType;
+        this.description = description;
     }
 
     public int getRewardID() {
@@ -48,6 +62,30 @@ public class Reward {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getRewardType() {
+        return rewardType;
+    }
+
+    public void setRewardType(String rewardType) {
+        this.rewardType = rewardType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getAwardedAt() {
+        return awardedAt;
+    }
+
+    public void setAwardedAt(LocalDate awardedAt) {
+        this.awardedAt = awardedAt;
     }
 
     @Override
