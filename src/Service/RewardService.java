@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class RewardService {
+    private final Map<String, Integer> userRewardCount = new HashMap<>();
     private int rewardIDCounter = 1;
 
     public List<Reward> processRewards(User user, Habit habit) {
@@ -17,7 +18,7 @@ public class RewardService {
         Reward streakReward = checkStreakReward(user, habit);
         if (streakReward != null) newRewards.add(streakReward);
 
-        Reward thresholdReward = checkThresholdReward(user, habit);
+        Reward thresholdReward = checkThresholdReward(user);
         if (thresholdReward != null) newRewards.add(thresholdReward);
 
         return newRewards;
@@ -25,7 +26,10 @@ public class RewardService {
 
     private Reward createRewardForHabit(User user, Habit habit) {
         int points = getFrequencyBasedPoints(habit.getFrequency());
-        Reward reward = new Reward(rewardIDCounter++, habit.getHabitName(), user.getUsername(),points);
+        int id = userRewardCount.getOrDefault(user.getUsername(),0) + 1;
+        userRewardCount.put(user.getUsername(), id);
+
+        Reward reward = new Reward(id, habit.getHabitName(), user.getUsername(),points);
 
         user.setRewards(reward);
         user.setPoints(user.getPoints() + points);
@@ -47,7 +51,10 @@ public class RewardService {
     }
 
     private Reward createReward(User user, Habit habit, String s, int points) {
-        Reward reward = new Reward(rewardIDCounter++, habit.getHabitName(), user.getUsername(),points);
+        int id = userRewardCount.getOrDefault(user.getUsername(),90) + 1;
+        userRewardCount.put(user.getUsername(), id);
+
+        Reward reward = new Reward(id, habit.getHabitName(), user.getUsername(),points, s);
 
         user.setRewards(reward);
         user.setPoints(user.getPoints() + points);
@@ -64,14 +71,25 @@ public class RewardService {
         return null;
     }
 
-    private Reward checkThresholdReward(User user, Habit habit) {
+    private Reward checkThresholdReward(User user) {
         int completed = user.getTotalHabitsCompleted();
 
         if (completed == 5 || completed == 10 || completed == 20 || completed == 50) {
             int points = getThresholdPoints(completed);
-            return createReward(user, habit,"Completed " + completed + " Habits", points);
+            return createRewardForSuccess(user, "Successfully Completed " + completed + " Habits", points);
         }
         return null;
+    }
+
+    private Reward createRewardForSuccess(User user, String s, int points) {
+        int id = userRewardCount.getOrDefault(user.getUsername(),90) + 1;
+        userRewardCount.put(user.getUsername(), id);
+
+        Reward reward = new Reward(id,"Completion of Habits", user.getUsername(), points, s);
+
+        user.setRewards(reward);
+        user.setPoints(user.getPoints() + points);
+        return reward;
     }
 
     private int getStreakPoints(int streak) {

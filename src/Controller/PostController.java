@@ -5,7 +5,6 @@ import Model.User;
 import Service.CommunityService;
 import Service.RewardService;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class PostController {
@@ -20,12 +19,12 @@ public class PostController {
     }
 
     public void PostMenu(User user) {
-        String community;
+        int communityID;
         while (true) {
-            System.out.println("Enter community to send post:");
-            community = scan.nextLine();
-            if(!communityService.existOrNot(community)) {
-                System.out.println("Community does not exist");
+            System.out.println("Enter Community ID to perform post operations:");
+            communityID = Integer.parseInt(scan.nextLine());
+            if(!communityService.existOrNot(communityID)) {
+                System.out.println("Community ID does not exist");
             } else {
                 break;
             }
@@ -39,13 +38,13 @@ public class PostController {
             int choice = Integer.parseInt(scan.nextLine());
             switch(choice) {
                 case 1:
-                    createPost(user, community);
+                    createPost(user, communityID);
                     break;
                 case 2:
-                     convertRewardIntoPost(user, community);
-                     break;
-                 case 3:
-                      return;
+                    convertRewardIntoPost(user, communityID);
+                    break;
+                case 3:
+                    return;
                 default:
                     System.out.println("Invalid choice");
                     break;
@@ -53,7 +52,7 @@ public class PostController {
         }
     }
 
-    private void convertRewardIntoPost(User user, String community) {
+    private void convertRewardIntoPost(User user, int communityID) {
         List<Reward> myrewards = rewardService.getRewardsByUser(user);
         for(Reward reward : myrewards) {
             System.out.println(reward);
@@ -74,7 +73,7 @@ public class PostController {
             }
             String content = sb.toString();
 
-            boolean created = communityService.createPost(user, reward, content, community);
+            boolean created = communityService.createPostForReward(user, reward, content, communityID);
             if (created) {
                 System.out.println("Post created and shared in the community successfully.");
             } else {
@@ -86,7 +85,8 @@ public class PostController {
 
     }
 
-    public void createPost(User user, String community) {
+
+    public void createPost(User user, int communityID) {
         System.out.println("Enter your content (type END to finish):");
         StringBuilder sb = new StringBuilder();
 
@@ -98,9 +98,8 @@ public class PostController {
             sb.append(line).append(". ");
         }
         String content = sb.toString();
-
-        boolean created = communityService.createPost(user, content, community);
-        if(created) {
+        boolean created = communityService.createPost(user, content, communityID);
+        if (created) {
             System.out.println("Post created and shared in the community successfully.");
         } else {
             System.out.println("Post could not be created.");

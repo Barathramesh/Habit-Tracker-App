@@ -79,10 +79,9 @@ public class UserController {
             System.out.println("Menu:");
             System.out.println("1. View Habits Menu:");
             System.out.println("2. View Community Menu:");
-            System.out.println("3. Write a Journal:");
-            System.out.println("4. View All Journals:");
-            System.out.println("5. View Post Menu:");
-            System.out.println("6. Return to Login Page:");
+            System.out.println("3. View Journal Menu:");
+            System.out.println("4. View Post Menu:");
+            System.out.println("5. Return to Login Page:");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -94,15 +93,12 @@ public class UserController {
                     communityController.CommunityMenu(user);
                    break;
                 case 3:
-                    journalController.createJournal(user);
+                    journalController.JournalMenu(user);
                    break;
                 case 4:
-                    journalController.viewAllMyJournal(user);
-                    break;
-                case 5:
                     postController.PostMenu(user);
                    break;
-                case 6:
+                case 5:
                     return;
                 default:
                     System.out.println("Invalid choice. Try again.");

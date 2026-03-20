@@ -46,10 +46,13 @@ public class HabitService {
 
         if (myhabit.getLastcompletedDate() == null) {
             myhabit.setStreak(1);
+            myhabit.setTotaldays(myhabit.getTotaldays() + 1);
         } else if (myhabit.getLastcompletedDate().plusDays(1).equals(today)) {
             myhabit.setStreak(myhabit.getStreak() + 1);
+            myhabit.setTotaldays(myhabit.getTotaldays() + 1);
         } else {
             myhabit.setStreak(1);
+            myhabit.setTotaldays(myhabit.getTotaldays() + 1);
         }
 
         myhabit.setLastcompletedDate(today);

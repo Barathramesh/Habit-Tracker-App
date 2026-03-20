@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Habit {
     private int habitID;
-    private String username;
-    private String habitName;
-    private String frequency;
-    private boolean completionStatus;
+    private final String username;
+    private final String habitName;
+    private final String frequency;
+    private final boolean completionStatus;
     private int streak;
     private int totaldays;
     private LocalDate lastcompletedDate;
@@ -75,6 +75,14 @@ public class Habit {
 
     public void addReminders(Remainder reminder) {
         reminders.add(reminder);
+    }
+
+    public int getTotaldays() {
+        return totaldays;
+    }
+
+    public void setTotaldays(int totaldays) {
+        this.totaldays = totaldays;
     }
 
     @Override

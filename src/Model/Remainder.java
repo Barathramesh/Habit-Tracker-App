@@ -25,10 +25,6 @@ public class Remainder {
         return remainderTime;
     }
 
-    public boolean isTriggered() {
-        return status;
-    }
-
     public void markTriggered() {
         this.status = true;
     }

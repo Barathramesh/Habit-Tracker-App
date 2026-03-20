@@ -12,9 +12,9 @@ public class User {
     private LocalDate lastLoginDate;
     private int totalHabitsCompleted = 0;
     private HashSet<Community> communities;
-    private HashSet<Journal> journals;
-    private List<Reward> rewards;
-    private List<Habit> habits;
+    private final HashSet<Journal> journals;
+    private final List<Reward> rewards;
+    private final List<Habit> habits;
 
     public User(String username, String password, String phone) {
         this.username = username;
@@ -33,24 +33,8 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public int getPoints() {
@@ -65,26 +49,6 @@ public class User {
         return communities;
     }
 
-    public void setCommunities(HashSet<Community> communities) {
-        this.communities = communities;
-    }
-
-    public int getLoginStreak() {
-        return loginStreak;
-    }
-
-    public void setLoginStreak(int loginStreak) {
-        this.loginStreak = loginStreak;
-    }
-
-    public LocalDate getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public void setLastLoginDate(LocalDate lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
-    }
-
     public int getTotalHabitsCompleted() {
         return totalHabitsCompleted;
     }
@@ -92,7 +56,6 @@ public class User {
     public void setTotalHabitsCompleted(int totalHabitsCompleted) {
         this.totalHabitsCompleted = totalHabitsCompleted;
     }
-
 
     public HashSet<Journal> getJournals() {
         return journals;
@@ -109,6 +72,7 @@ public class User {
     public void setRewards(Reward reward) {
         rewards.add(reward);
     }
+
     public List<Habit> getHabits() {
         return habits;
     }

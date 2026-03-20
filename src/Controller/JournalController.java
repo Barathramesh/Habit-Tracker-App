@@ -9,7 +9,6 @@ import java.util.*;
 public class JournalController {
     private final Scanner scan;
     private final JournalService journalService =  new JournalService();
-    private int journalId  = 1;
 
     public JournalController(Scanner scan) {
         this.scan = scan;
@@ -53,7 +52,7 @@ public class JournalController {
         }
 
         String content = sb.toString();
-        Journal journal = journalService.create(journalId++, mood, content, user);
+        Journal journal = journalService.create(mood, content, user);
         System.out.println("Journal Created Successfully");
         System.out.println(journal);
     }

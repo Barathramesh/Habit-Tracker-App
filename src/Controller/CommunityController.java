@@ -1,11 +1,11 @@
 package Controller;
 
+
 import Model.Community;
 import Model.Post;
 import Model.User;
 import Service.CommunityService;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,10 +22,11 @@ public class CommunityController {
         while (true) {
             System.out.println();
             System.out.println("1. Create a Community:");
-            System.out.println("2. Join a Community:");
-            System.out.println("3. View a Community:");
-            System.out.println("4. Leave a Community:");
-            System.out.println("5. Back to Main Menu.");
+            System.out.println("2. View a Community:");
+            System.out.println("3. Join a Community:");
+            System.out.println("4. View My Communities:");
+            System.out.println("5. Leave a Community:");
+            System.out.println("6. Back to Main Menu.");
 
             int choice = Integer.parseInt(scan.nextLine());
 
@@ -34,15 +35,18 @@ public class CommunityController {
                     createCommunity(user);
                     break;
                 case 2:
-                    joinCommunity(user);
+                    viewACommunity(user);
                     break;
                 case 3:
-                    viewCommunity();
+                    joinCommunity(user);
                     break;
                 case 4:
-                    leaveCommunity(user);
+                    viewMyCommunities(user);
                     break;
                 case 5:
+                    leaveCommunity(user);
+                    break;
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice!");
@@ -51,77 +55,108 @@ public class CommunityController {
         }
     }
 
-    public void createCommunity(User user) {
+    private void viewACommunity(User user) {
         while(true) {
-            System.out.println("Enter the name of the community: ");
-            String name = scan.nextLine();
+            System.out.println("Enter Community ID:");
+            int communityID = Integer.parseInt(scan.nextLine());
 
-            if(communityService.existOrNot(name)) {
-                 System.out.println("Community already exists!");
+            if(!communityService.existOrNot(communityID)) {
+                System.out.println("Invalid Community ID!");
             } else {
-                communityService.createCommunity(name,user);
-                System.out.println("Community has been created successfully!");
-                return;
+                Community currentCommunity = communityService.communityUsers(communityID, user);
+
+                if(currentCommunity != null) {
+                    System.out.println("List of Users:");
+                    for (User u : currentCommunity.getUsers()) {
+                        System.out.print(u.getUsername() + " ");
+                    }
+                    System.out.println();
+                    System.out.println("List of Posts:");
+                    if (currentCommunity.getPosts().isEmpty()) {
+                        System.out.println("No posts yet.");
+                    } else {
+                        for (Post p : currentCommunity.getPosts()) {
+                            System.out.println(p);
+                        }
+                    }
+                    return;
+                } else {
+                    System.out.println("Your are not able to see this community until you join this community.");
+                }
             }
         }
-
     }
 
+    private void viewAllCommunities() {
+        List<Community> allCommunities = communityService.viewAllCommunities();
+        for (Community community : allCommunities) {
+            System.out.println("Community ID: " + community.getCommunityID()+"      "+
+                    "Community Admin: "+ community.getAdminID());
+            System.out.println("Community Name: " + community.getCommunityName()+"      "+
+                    "Community Description: " + community.getDescription());
+            System.out.println();
+        }
+    }
+
+    public void createCommunity(User user) {
+        System.out.println("Enter the name of the community: ");
+        String name = scan.nextLine();
+        System.out.println("Enter the description of the community: ");
+        String description = scan.nextLine();
+
+        int id = communityService.createCommunity(name, description, user);
+        System.out.println("Community has been created successfully.!");
+        System.out.println("Your Community ID is: " + id);
+    }
+
+
     public void joinCommunity(User user) {
-        while(true) {
-            System.out.println("Enter the name of the community: ");
-            String name = scan.nextLine();
-            if(!communityService.existOrNot(name)) {
-                System.out.println("Community doesn't exists!");
+        viewAllCommunities();
+        while (true) {
+            System.out.println("Enter the Community ID: ");
+            int id = Integer.parseInt(scan.nextLine());
+            if (!communityService.existOrNot(id)) {
+                System.out.println("Community doesn't exists with this ID!");
             } else {
-                List<User> users = communityService.joinCommunity(name,user);
-                System.out.println("You have joined the community successfully!");
-                System.out.println(users);
-                return;
+                if(communityService.joinCommunity(id, user)) {
+                    System.out.println("You are already in this community!");
+                    return;
+                } else {
+                    System.out.println("You have joined the community successfully!");
+                    return;
+                }
             }
         }
     }
 
     public void leaveCommunity(User user) {
-        while(true) {
-            System.out.println("Enter the name of the community: ");
-            String name = scan.nextLine();
-            if(!communityService.existOrNot(name)) {
+        while (true) {
+            System.out.println("Enter the Community ID: ");
+            int id = Integer.parseInt(scan.nextLine());
+            if (!communityService.existOrNot(id)) {
                 System.out.println("Community doesn't exists!");
             } else {
-                communityService.leaveCommunity(name,user);
+                communityService.leaveCommunity(id, user);
                 System.out.println("You have left the community successfully!");
                 return;
             }
         }
     }
 
-    public void viewCommunity() {
-        while(true) {
-            System.out.println("Enter the name of the community: ");
-            String name = scan.nextLine();
-            if(!communityService.existOrNot(name)) {
-                System.out.println("Community doesn't exists!");
-            } else {
-                Community chats = communityService.viewCommunity(name);
-                HashSet<User> users = chats.getUsers();
-                List<Post> posts = chats.getPosts();
+    public void viewMyCommunities(User user) {
+        List<Community> myCommunities = communityService.viewMyCommunities(user);
 
-                System.out.println("List of users:");
-                for(User user : users) {
-                    System.out.println(user.getUsername());
-                }
+        if (myCommunities.isEmpty()) {
+            System.out.println("No communities available.");
+            return;
+        }
 
-                System.out.println("List of posts:");
-                if(posts.isEmpty()) {
-                    System.out.println("No posts in this community yet.");
-                } else {
-                    for(Post post : posts) {
-                        System.out.println(post);
-                    }
-                }
-                return;
-            }
+        for (Community c : myCommunities) {
+            System.out.println("Community ID: " + c.getCommunityID()+"      "+
+                    "Community Admin: "+ c.getAdminID());
+            System.out.println("Community Name: " + c.getCommunityName()+"      "+
+                    "Community Description: " + c.getDescription());
+            System.out.println();
         }
     }
 }

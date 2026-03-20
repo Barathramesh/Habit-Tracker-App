@@ -8,44 +8,55 @@ import Model.User;
 import java.util.*;
 
 public class CommunityService {
-    private final HashMap<String, Community> community = new HashMap<>();
+    private final HashMap<Integer, Community> community = new HashMap<>();
     private int CommunityID = 1;
     private int PostID = 1;
 
-    public boolean existOrNot(String name) {
-        return community.containsKey(name.toLowerCase());
+    public boolean existOrNot(int communityID) {
+        return community.containsKey(communityID);
     }
 
-    public void createCommunity(String name, User user) {
-        Community community1 = new Community(CommunityID++, name, user.getUsername(), user);
-        community.put(name.toLowerCase(), community1);
+    public int createCommunity(String communityName, String description, User user) {
+        Community community1 = new Community(CommunityID++, communityName, user.getUsername(), user, description);
+        community.put(community1.getCommunityID(), community1);
+        user.getCommunities().add(community1);
+        return community1.getCommunityID();
     }
 
-    public Community viewCommunity(String name) {
-        return community.get(name.toLowerCase());
+    public List<Community> viewMyCommunities(User user) {
+        List<Community> myCommunities = new ArrayList<>();
+        for(int i : community.keySet()) {
+            if(community.get(i).getUsers().contains(user)) {
+                myCommunities.add(community.get(i));
+            }
+        }
+        return myCommunities;
     }
 
-    public List<User> joinCommunity(String name, User user) {
-        Community community1 = community.get(name.toLowerCase());
+    public boolean joinCommunity(int communityID, User user) {
+        Community community1 = community.get(communityID);
+        if (community1.getUsers().contains(user)) {
+            return true;
+        }
         community1.getUsers().add(user);
-
-        return communityUsers(community1);
+        user.getCommunities().add(community1);
+        return false;
     }
 
-    public void leaveCommunity(String name, User user) {
-        Community community1 = community.get(name.toLowerCase());
+    public void leaveCommunity(int communityID, User user) {
+        Community community1 = community.get(communityID);
         if(community1 == null) {
             return;
+        }
+        if(community1.getAdminID().equals(user.getUsername())) {
+            community.remove(communityID,community1);
+            System.out.println("The Entire community has been deleted!");
         }
         community1.getUsers().removeIf(u -> u.getUsername().equals(user.getUsername()));
     }
 
-    public List<User> communityUsers(Community community) {
-        return new ArrayList<>(community.getUsers());
-    }
-
-    public boolean createPost(User user, String content, String group) {
-        Community community1 = community.get(group.toLowerCase());
+    public boolean createPost(User user, String content, int communityID) {
+        Community community1 = community.get(communityID);
         if(community1 == null) {
             return false;
         }
@@ -54,8 +65,21 @@ public class CommunityService {
         return true;
     }
 
-    public boolean createPost(User user, Reward reward, String content, String group) {
-        Community community1 = community.get(group.toLowerCase());
+    public List<Community> viewAllCommunities() {
+        return new ArrayList<>(community.values());
+    }
+
+    public Community communityUsers(int communityID, User user) {
+       for(int i : community.keySet()) {
+           if(community.get(i).getUsers().contains(user) && i == communityID) {
+               return community.get(i);
+           }
+       }
+       return null;
+    }
+
+    public boolean createPostForReward(User user, Reward reward, String content, int communityID) {
+        Community community1 = community.get(communityID);
         if(community1 == null) {
             return false;
         }
