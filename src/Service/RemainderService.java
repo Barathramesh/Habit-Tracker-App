@@ -1,37 +1,47 @@
 package Service;
 
+import Model.Habit;
 import Model.Remainder;
 import Model.User;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class RemainderService {
-    List<Remainder> remainderList = new ArrayList<>();
 
-    public void create(int remainderID, User user, String habitName, LocalDateTime reminderTime) {
-        Remainder remainder = new Remainder(remainderID, user.getUsername(), habitName, reminderTime);
-        remainderList.add(remainder);
+    public void createRemainder(int remainderID, User user, Habit habit, LocalDateTime reminderTime) {
+        Remainder remainder = new Remainder(remainderID, user.getUsername(), habit.getHabitName(), reminderTime);
+        habit.addReminders(remainder);
     }
-    public void startReminderChecker() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-        scheduler.scheduleAtFixedRate(() -> {
-            LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+    public void scheduleReminder(User user, Habit habit, Remainder r) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-            for (Remainder r : remainderList) {
-                LocalDateTime reminderTime = r.getRemainderTime().withSecond(0).withNano(0);
+        LocalDateTime now = LocalDateTime.now();
+        long delay = Duration.between(now, r.getRemainderTime()).toMillis();
 
-                if (!r.isTriggered() && !now.isBefore(reminderTime)) {
-                    System.out.println("🔔 Reminder for " + r.getUsername() +
-                            ": Time to do habit -> " + r.getHabitname());
+        if (delay < 0) {
+            System.out.println("Cannot schedule past reminder");
+            return;
+        }
 
-                    r.markTriggered();
-                }
+        scheduler.schedule(() -> {
+            System.out.println("🔔 Reminder for " + user.getUsername()
+                    + ": Time to do habit -> " + habit.getHabitName());
+
+            r.markTriggered();
+            scheduler.shutdown();
+
+        }, delay, TimeUnit.MILLISECONDS);
+    }
+
+
+    public void startReminderChecker(User user) {
+        for (Habit habit : user.getHabits()) {
+            for (Remainder r : habit.getReminders()) {
+                scheduleReminder(user, habit, r);
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }
     }
 }

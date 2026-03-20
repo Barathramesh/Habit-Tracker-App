@@ -19,44 +19,12 @@ public class Community {
     }
 
 
-    public int getCommunityID() {
-        return CommunityID;
-    }
-
-    public void setCommunityID(int communityID) {
-        CommunityID = communityID;
-    }
-
-    public String getCommunityName() {
-        return CommunityName;
-    }
-
-    public void setCommunityName(String communityName) {
-        CommunityName = communityName;
-    }
-
-    public String getAdminID() {
-        return AdminID;
-    }
-
-    public void setAdminID(String adminID) {
-        AdminID = adminID;
-    }
-
     public HashSet<User> getUsers() {
         return Users;
     }
 
-    public void setUsers(HashSet<User> users) {
-        Users = users;
-    }
-
     public List<Post> getPosts() {
         return Posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        Posts = posts;
     }
 
     @Override

@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import Service.CommunityService;
+import Service.RewardService;
 import Service.UserService;
 
 import java.util.Scanner;
@@ -17,10 +18,11 @@ public class UserController {
     public UserController(Scanner scan) {
         this.scan = scan;
         CommunityService communityService = new CommunityService();
+        RewardService rewardService = new RewardService();
         this.communityController = new CommunityController(scan, communityService);
-        this.habitController = new HabitController(scan);
+        this.habitController = new HabitController(scan, rewardService);
         this.journalController = new JournalController(scan);
-        this.postController = new PostController(scan, communityService);
+        this.postController = new PostController(scan, communityService, rewardService);
     }
     public void initialize() {
         userService.register("barath","123","123456789");
@@ -79,7 +81,7 @@ public class UserController {
             System.out.println("2. View Community Menu:");
             System.out.println("3. Write a Journal:");
             System.out.println("4. View All Journals:");
-            System.out.println("5. Create a Post:");
+            System.out.println("5. View Post Menu:");
             System.out.println("6. Return to Login Page:");
 
             int choice = Integer.parseInt(scan.nextLine());
@@ -98,7 +100,7 @@ public class UserController {
                     journalController.viewAllMyJournal(user);
                     break;
                 case 5:
-                    postController.createPost(user);
+                    postController.PostMenu(user);
                    break;
                 case 6:
                     return;

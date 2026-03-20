@@ -1,6 +1,8 @@
 package Model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Habit {
     private int habitID;
@@ -12,6 +14,7 @@ public class Habit {
     private int totaldays;
     private LocalDate lastcompletedDate;
     private LocalDate lastRewardDate;
+    private List<Remainder> reminders;
 
     public Habit(String userID, int habitID, String habitName, String frequency) {
         this.habitID = habitID;
@@ -21,56 +24,25 @@ public class Habit {
         this.completionStatus = false;
         this.streak = 0;
         this.totaldays = 0;
-        this.lastcompletedDate = LocalDate.now();
+        this.lastcompletedDate = null;
         this.lastRewardDate = null;
-    }
-
-    public int getHabitID() {
-        return habitID;
-    }
-
-    public void setHabitID(int habitID) {
-        this.habitID = habitID;
-    }
-
-    public String getUserName() {
-        return username;
-    }
-
-    public void setUserName(String userID) {
-        this.username = userID;
+        reminders = new ArrayList<>();
     }
 
     public String getHabitName() {
         return habitName;
     }
 
-    public void setHabitName(String habitName) {
-        this.habitName = habitName;
-    }
-
     public String getFrequency() {
         return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
     }
 
     public boolean isCompletionStatus() {
         return completionStatus;
     }
 
-    public void setCompletionStatus(boolean completionStatus) {
-        this.completionStatus = completionStatus;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public int getStreak() {
@@ -79,14 +51,6 @@ public class Habit {
 
     public void setStreak(int streak) {
         this.streak = streak;
-    }
-
-    public int getTotaldays() {
-        return totaldays;
-    }
-
-    public void setTotaldays(int totaldays) {
-        this.totaldays = totaldays;
     }
 
     public LocalDate getLastRewardDate() {
@@ -103,6 +67,14 @@ public class Habit {
 
     public void setLastcompletedDate(LocalDate lastcompletedDate) {
         this.lastcompletedDate = lastcompletedDate;
+    }
+
+    public List<Remainder> getReminders() {
+        return reminders;
+    }
+
+    public void addReminders(Remainder reminder) {
+        reminders.add(reminder);
     }
 
     @Override

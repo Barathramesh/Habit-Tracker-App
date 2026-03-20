@@ -12,14 +12,14 @@ import java.util.*;
 public class HabitController {
     private final Scanner scan;
     private final HabitService habitService = new HabitService();
-    private final RewardService rewardService = new RewardService();
+    private final RewardService rewardService;
     private final RemainderController remainderController;
     private int habitID = 5;
-    private int rewardID = 1;
 
-    public HabitController(Scanner scan) {
+    public HabitController(Scanner scan, RewardService rewardService) {
         this.scan = scan;
         this.remainderController = new RemainderController(scan);
+        this.rewardService = rewardService;
     }
 
     public void HabitMenu(User user) {
@@ -50,13 +50,29 @@ public class HabitController {
                     break;
                 case 5:
                     viewMyRewards(user);
+                    break;
                 case 6:
-                    remainderController.createRemainder(user);
+                    createRemainder(user);
+                    break;
                 case 7:
                     return;
                 default:
                     System.out.println("Invalid choice!");
                     break;
+            }
+        }
+    }
+
+    private void createRemainder(User user) {
+        while (true) {
+            System.out.println("Enter Habit Name:");
+            String habitName = scan.nextLine();
+            Habit habit = habitService.existsOrNot(user, habitName);
+            if (habit != null) {
+                remainderController.createRemainder(user, habit);
+                break;
+            } else {
+                System.out.println("Invalid Habit Name!");
             }
         }
     }
@@ -75,6 +91,10 @@ public class HabitController {
         String choice2 = scan.nextLine();
 
         String habit = defaultHabit.get(choice);
+        if (habitService.existsOrNot(user, habit) != null) {
+            System.out.println("Habit already exists!");
+            return;
+        }
         habitService.predefinedHabits(choice, habit, user, choice2);
         System.out.println("You have successfully started the Habit.");
     }
@@ -102,36 +122,43 @@ public class HabitController {
     }
 
     private void completedMyHabit(User user) {
-
         List<Habit> myhabits = habitService.getMyHabits(user);
 
-        if (myhabits.isEmpty()) {
+        if(myhabits.isEmpty()) {
             System.out.println("No habits found");
             return;
         }
 
         myhabits.forEach(System.out::println);
+        String habitName;
 
-        System.out.println("Enter a Habit you have completed:");
-        String habitName = scan.nextLine();
+        while(true) {
+            System.out.println("Enter a Habit you have completed:");
+            habitName = scan.nextLine();
 
-        Habit habit = habitService.markHabitCompleted(user, habitName);
+            Habit habit = habitService.getSingleHabit(habitName, user);
+            if(habit == null) {
+                System.out.println("Invalid Habit Name!");
+            } else {
+                break;
+            }
+        }
 
-        if (habit == null) {
-            System.out.println("Invalid habit!");
+        Habit completedHabit = habitService.markHabitCompleted(user, habitName);
+
+        if(completedHabit == null) {
             return;
         }
 
-        // 🔥 Only one call
-        List<Reward> rewards = rewardService.processRewards(user, habit);
-
+        List<Reward> rewards = rewardService.processRewards(user, completedHabit);
         rewards.forEach(System.out::println);
 
         System.out.println("Keep rocking.. 🚀");
     }
 
+
     private void viewMyRewards(User user) {
-        List<Reward> myRewards = rewardService.getRewardsByUser(user.getUsername());
+        List<Reward> myRewards = rewardService.getRewardsByUser(user);
         if(!myRewards.isEmpty()) {
             for (Reward reward : myRewards) {
                 System.out.println(reward);

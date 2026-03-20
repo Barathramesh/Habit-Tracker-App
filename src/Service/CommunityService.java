@@ -2,12 +2,13 @@ package Service;
 
 import Model.Community;
 import Model.Post;
+import Model.Reward;
 import Model.User;
 
 import java.util.*;
 
 public class CommunityService {
-    private final LinkedHashMap<String, Community> community = new LinkedHashMap<>();
+    private final HashMap<String, Community> community = new HashMap<>();
     private int CommunityID = 1;
     private int PostID = 1;
 
@@ -49,6 +50,16 @@ public class CommunityService {
             return false;
         }
         Post post = new Post(PostID++, user.getUsername(), community1, content);
+        community1.getPosts().add(post);
+        return true;
+    }
+
+    public boolean createPost(User user, Reward reward, String content, String group) {
+        Community community1 = community.get(group.toLowerCase());
+        if(community1 == null) {
+            return false;
+        }
+        Post post = new Post(PostID++, user.getUsername(), community1, content, reward);
         community1.getPosts().add(post);
         return true;
     }

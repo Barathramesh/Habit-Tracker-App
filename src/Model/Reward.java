@@ -90,7 +90,8 @@ public class Reward {
 
     @Override
     public String toString() {
-        return "Reward: " + rewardName +
+        return "Reward Id: "+rewardID +
+                ", Reward: " + rewardName +
                 ", Points: " + points +
                 ", User: " + username +
                 ", Time: " + awardedAt;

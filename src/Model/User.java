@@ -12,12 +12,18 @@ public class User {
     private LocalDate lastLoginDate;
     private int totalHabitsCompleted = 0;
     private HashSet<Community> communities;
+    private HashSet<Journal> journals;
+    private List<Reward> rewards;
+    private List<Habit> habits;
 
     public User(String username, String password, String phone) {
         this.username = username;
         this.password = password;
         this.phone = phone;
         this.communities = new HashSet<>();
+        this.journals = new HashSet<>();
+        this.rewards = new ArrayList<>();
+        this.habits = new ArrayList<>();
         this.loginStreak = 0;
         this.lastLoginDate = null;
         this.totalHabitsCompleted = 0;
@@ -87,6 +93,29 @@ public class User {
         this.totalHabitsCompleted = totalHabitsCompleted;
     }
 
+
+    public HashSet<Journal> getJournals() {
+        return journals;
+    }
+
+    public void setJournals(Journal journal) {
+        journals.add(journal);
+    }
+
+    public List<Reward> getRewards() {
+        return rewards;
+    }
+
+    public void setRewards(Reward reward) {
+        rewards.add(reward);
+    }
+    public List<Habit> getHabits() {
+        return habits;
+    }
+
+    public void addHabit(Habit habit) {
+        habits.add(habit);
+    }
 
     @Override
     public String toString() {
